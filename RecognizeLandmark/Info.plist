@@ -4,6 +4,8 @@
 <dict>
 	<key>NSCameraUsageDescription</key>
 	<string>We need access to your camera to recognize landmarks.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>記錄景點時會帶上當下的位置,讓你之後能在地圖上瀏覽。</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

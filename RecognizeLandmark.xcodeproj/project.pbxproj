@@ -10,6 +10,7 @@
 		915D5DC12CA6A2D000162B3B /* LandmarkRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 915D5DC02CA6A2D000162B3B /* LandmarkRecord.swift */; };
 		915D5DC32CA6A2D000162B3B /* PhotoStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 915D5DC22CA6A2D000162B3B /* PhotoStorage.swift */; };
 		915D5DC52CA6A2D000162B3B /* LocationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 915D5DC42CA6A2D000162B3B /* LocationProvider.swift */; };
+		915D5DC72CA6A2D000162B3B /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 915D5DC62CA6A2D000162B3B /* Persistence.swift */; };
 		915D5DAC2CA6A29700162B3B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 915D5DAB2CA6A29700162B3B /* AppDelegate.swift */; };
 		915D5DAE2CA6A29700162B3B /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 915D5DAD2CA6A29700162B3B /* SceneDelegate.swift */; };
 		915D5DB02CA6A29700162B3B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 915D5DAF2CA6A29700162B3B /* ViewController.swift */; };
@@ -22,6 +23,7 @@
 		915D5DC02CA6A2D000162B3B /* LandmarkRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandmarkRecord.swift; sourceTree = "<group>"; };
 		915D5DC22CA6A2D000162B3B /* PhotoStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoStorage.swift; sourceTree = "<group>"; };
 		915D5DC42CA6A2D000162B3B /* LocationProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationProvider.swift; sourceTree = "<group>"; };
+		915D5DC62CA6A2D000162B3B /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
 		915D5DA82CA6A29700162B3B /* RecognizeLandmark.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RecognizeLandmark.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		915D5DAB2CA6A29700162B3B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		915D5DAD2CA6A29700162B3B /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -68,6 +70,7 @@
 				915D5DC02CA6A2D000162B3B /* LandmarkRecord.swift */,
 				915D5DC22CA6A2D000162B3B /* PhotoStorage.swift */,
 				915D5DC42CA6A2D000162B3B /* LocationProvider.swift */,
+				915D5DC62CA6A2D000162B3B /* Persistence.swift */,
 				915D5DB12CA6A29700162B3B /* Main.storyboard */,
 				915D5DB42CA6A29900162B3B /* Assets.xcassets */,
 				915D5DB62CA6A29900162B3B /* LaunchScreen.storyboard */,
@@ -153,6 +156,7 @@
 				915D5DC12CA6A2D000162B3B /* LandmarkRecord.swift in Sources */,
 				915D5DC32CA6A2D000162B3B /* PhotoStorage.swift in Sources */,
 				915D5DC52CA6A2D000162B3B /* LocationProvider.swift in Sources */,
+				915D5DC72CA6A2D000162B3B /* Persistence.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
