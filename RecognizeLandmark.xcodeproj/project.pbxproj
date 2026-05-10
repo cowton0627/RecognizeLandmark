@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		915D5DAC2CA6A29700162B3B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 915D5DAB2CA6A29700162B3B /* AppDelegate.swift */; };
+		915D5DAE2CA6A29700162B3B /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 915D5DAD2CA6A29700162B3B /* SceneDelegate.swift */; };
+		915D5DB02CA6A29700162B3B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 915D5DAF2CA6A29700162B3B /* ViewController.swift */; };
+		915D5DB32CA6A29700162B3B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 915D5DB12CA6A29700162B3B /* Main.storyboard */; };
+		915D5DB52CA6A29900162B3B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 915D5DB42CA6A29900162B3B /* Assets.xcassets */; };
+		915D5DB82CA6A29900162B3B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 915D5DB62CA6A29900162B3B /* LaunchScreen.storyboard */; };
 		915D5DC12CA6A2D000162B3B /* LandmarkRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 915D5DC02CA6A2D000162B3B /* LandmarkRecord.swift */; };
 		915D5DC32CA6A2D000162B3B /* PhotoStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 915D5DC22CA6A2D000162B3B /* PhotoStorage.swift */; };
 		915D5DC52CA6A2D000162B3B /* LocationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 915D5DC42CA6A2D000162B3B /* LocationProvider.swift */; };
@@ -17,15 +23,17 @@
 		915D5DCF2CA6A2D000162B3B /* PlaceLookup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 915D5DCE2CA6A2D000162B3B /* PlaceLookup.swift */; };
 		915D5DD12CA6A2D000162B3B /* CaptureClassifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 915D5DD02CA6A2D000162B3B /* CaptureClassifier.swift */; };
 		915D5DD32CA6A2D000162B3B /* CaptureReviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 915D5DD22CA6A2D000162B3B /* CaptureReviewView.swift */; };
-		915D5DAC2CA6A29700162B3B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 915D5DAB2CA6A29700162B3B /* AppDelegate.swift */; };
-		915D5DAE2CA6A29700162B3B /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 915D5DAD2CA6A29700162B3B /* SceneDelegate.swift */; };
-		915D5DB02CA6A29700162B3B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 915D5DAF2CA6A29700162B3B /* ViewController.swift */; };
-		915D5DB32CA6A29700162B3B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 915D5DB12CA6A29700162B3B /* Main.storyboard */; };
-		915D5DB52CA6A29900162B3B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 915D5DB42CA6A29900162B3B /* Assets.xcassets */; };
-		915D5DB82CA6A29900162B3B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 915D5DB62CA6A29900162B3B /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		915D5DA82CA6A29700162B3B /* RecognizeLandmark.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RecognizeLandmark.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		915D5DAB2CA6A29700162B3B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		915D5DAD2CA6A29700162B3B /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		915D5DAF2CA6A29700162B3B /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		915D5DB22CA6A29700162B3B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		915D5DB42CA6A29900162B3B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		915D5DB72CA6A29900162B3B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		915D5DB92CA6A29900162B3B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		915D5DC02CA6A2D000162B3B /* LandmarkRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandmarkRecord.swift; sourceTree = "<group>"; };
 		915D5DC22CA6A2D000162B3B /* PhotoStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoStorage.swift; sourceTree = "<group>"; };
 		915D5DC42CA6A2D000162B3B /* LocationProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationProvider.swift; sourceTree = "<group>"; };
@@ -36,14 +44,6 @@
 		915D5DCE2CA6A2D000162B3B /* PlaceLookup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceLookup.swift; sourceTree = "<group>"; };
 		915D5DD02CA6A2D000162B3B /* CaptureClassifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureClassifier.swift; sourceTree = "<group>"; };
 		915D5DD22CA6A2D000162B3B /* CaptureReviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureReviewView.swift; sourceTree = "<group>"; };
-		915D5DA82CA6A29700162B3B /* RecognizeLandmark.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RecognizeLandmark.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		915D5DAB2CA6A29700162B3B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		915D5DAD2CA6A29700162B3B /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		915D5DAF2CA6A29700162B3B /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		915D5DB22CA6A29700162B3B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		915D5DB42CA6A29900162B3B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		915D5DB72CA6A29900162B3B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		915D5DB92CA6A29900162B3B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -125,7 +125,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1520;
-				LastUpgradeCheck = 1520;
+				LastUpgradeCheck = 2640;
 				TargetAttributes = {
 					915D5DA72CA6A29700162B3B = {
 						CreatedOnToolsVersion = 15.2;
@@ -241,6 +241,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -264,6 +265,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -304,6 +306,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = "";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -320,6 +323,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -332,7 +336,6 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = RecognizeLandmark/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -359,7 +362,6 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = RecognizeLandmark/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
