@@ -22,8 +22,7 @@ enum PlaceLookup {
     private static func nearbyPOIs(_ location: CLLocation) async -> [CaptureCandidate] {
         let radius: CLLocationDistance = 100
         let poiRequest = MKLocalPointsOfInterestRequest(center: location.coordinate, radius: radius)
-        let request = MKLocalSearch.Request(pointsOfInterestRequest: poiRequest)
-        let search = MKLocalSearch(request: request)
+        let search = MKLocalSearch(request: poiRequest)
         do {
             let response = try await search.start()
             let candidates = response.mapItems.compactMap { item -> CaptureCandidate? in
