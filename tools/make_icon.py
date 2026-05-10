@@ -8,6 +8,7 @@
 預設會覆蓋 RecognizeLandmark/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png。
 依賴:Pillow(pip install Pillow)。
 """
+import math
 from pathlib import Path
 from PIL import Image, ImageDraw, ImageFilter
 
@@ -21,148 +22,134 @@ def lerp(a, b, t):
 def make_icon():
     img = Image.new('RGBA', (SIZE, SIZE), (0, 0, 0, 255))
 
-    # ---- 1. Sunset gradient background ----
-    top = (255, 168, 120)   # warm coral
-    mid = (228, 78, 132)    # rose
-    bot = (38, 28, 78)      # deep indigo
+    # ---- 1. 4-stop sunset gradient ----
+    top = (255, 198, 150)        # warm peach
+    mid_upper = (232, 130, 128)  # coral
+    mid_lower = (105, 65, 130)   # warm purple
+    bot = (22, 18, 50)           # deep navy
     bg = ImageDraw.Draw(img)
     for y in range(SIZE):
         t = y / SIZE
-        if t < 0.55:
-            color = lerp(top, mid, t / 0.55) + (255,)
+        if t < 0.30:
+            c = lerp(top, mid_upper, t / 0.30)
+        elif t < 0.62:
+            c = lerp(mid_upper, mid_lower, (t - 0.30) / 0.32)
         else:
-            color = lerp(mid, bot, (t - 0.55) / 0.45) + (255,)
-        bg.line([(0, y), (SIZE, y)], fill=color)
+            c = lerp(mid_lower, bot, (t - 0.62) / 0.38)
+        bg.line([(0, y), (SIZE, y)], fill=c + (255,))
 
-    # ---- 2. Soft sun glow (upper-right) ----
-    glow = Image.new('RGBA', (SIZE, SIZE), (0, 0, 0, 0))
-    gd = ImageDraw.Draw(glow)
-    cx, cy = int(SIZE * 0.72), int(SIZE * 0.26)
-    gd.ellipse([cx - 220, cy - 220, cx + 220, cy + 220],
-               fill=(255, 235, 200, 100))
-    glow = glow.filter(ImageFilter.GaussianBlur(radius=80))
-    img = Image.alpha_composite(img, glow)
+    # ---- 2. Warm horizon glow(取代大太陽) ----
+    horizon = Image.new('RGBA', (SIZE, SIZE), (0, 0, 0, 0))
+    hd = ImageDraw.Draw(horizon)
+    hy = int(SIZE * 0.66)
+    hd.ellipse([SIZE // 2 - 440, hy - 70, SIZE // 2 + 440, hy + 70],
+               fill=(255, 195, 145, 120))
+    horizon = horizon.filter(ImageFilter.GaussianBlur(radius=85))
+    img = Image.alpha_composite(img, horizon)
 
-    # ---- 3. Distant mountains (two faded layers) ----
-    for alpha, ymin, ymax, n_peaks, jitter in [
-        (60, 0.60, 0.70, 7, 0.04),
-        (90, 0.66, 0.76, 5, 0.05),
+    # ---- 3. Distant mountains:3 layers,sin-based smooth curves ----
+    for alpha, base_y, amp, phase, color in [
+        (70, int(SIZE * 0.66), 0.040, 0.0, (35, 28, 70)),
+        (110, int(SIZE * 0.72), 0.035, 0.7, (24, 18, 56)),
+        (150, int(SIZE * 0.77), 0.025, 1.4, (18, 14, 44)),
     ]:
         layer = Image.new('RGBA', (SIZE, SIZE), (0, 0, 0, 0))
         ld = ImageDraw.Draw(layer)
-        pts = [(0, int(SIZE * ymax))]
-        for i in range(n_peaks + 1):
-            x = int(SIZE * i / n_peaks)
-            if i % 2 == 0:
-                y = int(SIZE * (ymax - jitter * 1.5))
-            else:
-                y = int(SIZE * (ymin + jitter * (i % 3)))
+        pts = []
+        for x in range(0, SIZE + 1, 6):
+            wave = (
+                math.sin(x / SIZE * math.pi * 3 + phase) * 0.6
+                + math.sin(x / SIZE * math.pi * 7 + phase * 2) * 0.3
+                + math.sin(x / SIZE * math.pi * 13 + phase * 3) * 0.1
+            )
+            y = int(base_y - SIZE * amp * wave)
             pts.append((x, y))
-        pts.append((SIZE, int(SIZE * ymax)))
         pts.append((SIZE, SIZE))
         pts.append((0, SIZE))
-        ld.polygon(pts, fill=(20, 12, 50, alpha))
+        ld.polygon(pts, fill=color + (alpha,))
         img = Image.alpha_composite(img, layer)
 
-    # ---- 4. Drop shadow for tower ----
+    # ---- 4. Tokyo Tower 式輪廓:天線 + 上柱 + 觀景艙 + 下柱 + 撐開底座 ----
+    cx = SIZE // 2
+    antenna_tip_y    = int(SIZE * 0.17)
+    antenna_base_y   = int(SIZE * 0.28)
+    upper_col_top_y  = int(SIZE * 0.30)
+    pod_top_y        = int(SIZE * 0.40)
+    pod_bot_y        = int(SIZE * 0.50)
+    lower_col_bot_y  = int(SIZE * 0.70)
+    base_bot_y       = int(SIZE * 0.84)
+
+    antenna_w = 5
+    column_w  = 28
+    pod_w     = 78
+    base_w    = 92
+
+    right = [
+        (cx,                  antenna_tip_y),
+        (cx + antenna_w,      antenna_base_y),
+        (cx + column_w,       upper_col_top_y),
+        (cx + column_w,       pod_top_y),
+        (cx + pod_w,          pod_top_y),
+        (cx + pod_w,          pod_bot_y),
+        (cx + column_w,       pod_bot_y),
+        (cx + column_w,       lower_col_bot_y),
+        (cx + base_w,         base_bot_y),
+    ]
+    left = [(2 * cx - x, y) for (x, y) in reversed(right)]
+    tower_pts = right + left
+
+    # 4a. Drop shadow(讓塔有重量、不浮空)
     shadow = Image.new('RGBA', (SIZE, SIZE), (0, 0, 0, 0))
     sd = ImageDraw.Draw(shadow)
-    cx_t = SIZE // 2
-    top_y = int(SIZE * 0.22)
-    spire_base_y = int(SIZE * 0.36)
-    body_top_y = int(SIZE * 0.42)
-    tier_y = int(SIZE * 0.56)
-    body_bot_y = int(SIZE * 0.76)
-    base_y = int(SIZE * 0.82)
-    base_bot_y = int(SIZE * 0.84)
-
-    spire_half = 8
-    body_top_half = 46
-    tier_half = 78
-    body_bot_half = 78
-    base_half = 130
-
-    tower_pts = [
-        (cx_t, top_y),
-        (cx_t + spire_half, spire_base_y),
-        (cx_t + body_top_half, body_top_y),
-        (cx_t + body_top_half, tier_y - 14),
-        (cx_t + tier_half, tier_y - 14),
-        (cx_t + tier_half, tier_y + 14),
-        (cx_t + body_bot_half, tier_y + 14),
-        (cx_t + body_bot_half, body_bot_y),
-        (cx_t + base_half, base_y),
-        (cx_t + base_half, base_bot_y),
-        (cx_t - base_half, base_bot_y),
-        (cx_t - base_half, base_y),
-        (cx_t - body_bot_half, body_bot_y),
-        (cx_t - body_bot_half, tier_y + 14),
-        (cx_t - tier_half, tier_y + 14),
-        (cx_t - tier_half, tier_y - 14),
-        (cx_t - body_top_half, tier_y - 14),
-        (cx_t - body_top_half, body_top_y),
-        (cx_t - spire_half, spire_base_y),
-    ]
-    # Offset shadow slightly down
-    shadow_pts = [(x + 6, y + 14) for (x, y) in tower_pts]
-    sd.polygon(shadow_pts, fill=(0, 0, 0, 110))
-    shadow = shadow.filter(ImageFilter.GaussianBlur(radius=18))
+    sh_pts = [(x + 5, y + 22) for (x, y) in tower_pts]
+    sd.polygon(sh_pts, fill=(0, 0, 0, 110))
+    shadow = shadow.filter(ImageFilter.GaussianBlur(radius=24))
     img = Image.alpha_composite(img, shadow)
 
-    # ---- 5. Tower silhouette (white) ----
+    # 4b. 觀景艙暖光(光暈在塔身後面,塔身會蓋上來)
+    pod_glow = Image.new('RGBA', (SIZE, SIZE), (0, 0, 0, 0))
+    pgd = ImageDraw.Draw(pod_glow)
+    pod_cy = (pod_top_y + pod_bot_y) // 2
+    pgd.ellipse(
+        [cx - pod_w - 30, pod_cy - 35,
+         cx + pod_w + 30, pod_cy + 35],
+        fill=(255, 200, 130, 80),
+    )
+    pod_glow = pod_glow.filter(ImageFilter.GaussianBlur(radius=14))
+    img = Image.alpha_composite(img, pod_glow)
+
+    # 4c. 塔身(白)
     twr = Image.new('RGBA', (SIZE, SIZE), (0, 0, 0, 0))
     td = ImageDraw.Draw(twr)
-    td.polygon(tower_pts, fill=(255, 255, 255, 255))
+    td.polygon(tower_pts, fill=(252, 250, 248, 255))
 
-    # Lit windows on the body (small warm rectangles)
-    win_color = (255, 220, 130, 230)
-    for y_pos in [int(SIZE * 0.62), int(SIZE * 0.66), int(SIZE * 0.70)]:
-        for x_off in [-30, 0, 30]:
-            td.rectangle([cx_t + x_off - 6, y_pos,
-                          cx_t + x_off + 6, y_pos + 12],
-                         fill=win_color)
+    # 4d. 觀景艙中央橫向暖光帶(暗示「窗戶亮了」)
+    strip_h = 5
+    td.rectangle(
+        [cx - pod_w + 10, pod_cy - strip_h,
+         cx + pod_w - 10, pod_cy + strip_h],
+        fill=(255, 195, 125, 245),
+    )
 
     img = Image.alpha_composite(img, twr)
 
-    # ---- 6. Glowing dot at spire tip ----
-    dot_glow = Image.new('RGBA', (SIZE, SIZE), (0, 0, 0, 0))
-    dgd = ImageDraw.Draw(dot_glow)
-    dot_y = top_y - 22
-    dgd.ellipse([cx_t - 70, dot_y - 70, cx_t + 70, dot_y + 70],
-                fill=(255, 230, 130, 130))
-    dot_glow = dot_glow.filter(ImageFilter.GaussianBlur(radius=22))
-    img = Image.alpha_composite(img, dot_glow)
+    # ---- 5. 天線尖端細小光點 + 柔光 ----
+    glow = Image.new('RGBA', (SIZE, SIZE), (0, 0, 0, 0))
+    gd = ImageDraw.Draw(glow)
+    glow_y = antenna_tip_y - 22
+    gd.ellipse([cx - 38, glow_y - 38, cx + 38, glow_y + 38],
+               fill=(255, 235, 170, 110))
+    glow = glow.filter(ImageFilter.GaussianBlur(radius=16))
+    img = Image.alpha_composite(img, glow)
 
     dot = Image.new('RGBA', (SIZE, SIZE), (0, 0, 0, 0))
-    ddd = ImageDraw.Draw(dot)
-    dot_r = 16
-    ddd.ellipse([cx_t - dot_r, dot_y - dot_r,
-                 cx_t + dot_r, dot_y + dot_r],
-                fill=(255, 235, 150, 255))
+    dd = ImageDraw.Draw(dot)
+    dot_r = 7
+    dd.ellipse([cx - dot_r, glow_y - dot_r, cx + dot_r, glow_y + dot_r],
+               fill=(255, 240, 185, 255))
     img = Image.alpha_composite(img, dot)
 
-    # ---- 7. Viewfinder corner brackets (subtle) ----
-    brk = Image.new('RGBA', (SIZE, SIZE), (0, 0, 0, 0))
-    bd = ImageDraw.Draw(brk)
-    m = 110          # margin from edge
-    L = 95           # bracket arm length
-    T = 14           # thickness
-    col = (255, 255, 255, 130)
-    # Top-left
-    bd.rectangle([m, m, m + L, m + T], fill=col)
-    bd.rectangle([m, m, m + T, m + L], fill=col)
-    # Top-right
-    bd.rectangle([SIZE - m - L, m, SIZE - m, m + T], fill=col)
-    bd.rectangle([SIZE - m - T, m, SIZE - m, m + L], fill=col)
-    # Bottom-left
-    bd.rectangle([m, SIZE - m - T, m + L, SIZE - m], fill=col)
-    bd.rectangle([m, SIZE - m - L, m + T, SIZE - m], fill=col)
-    # Bottom-right
-    bd.rectangle([SIZE - m - L, SIZE - m - T, SIZE - m, SIZE - m], fill=col)
-    bd.rectangle([SIZE - m - T, SIZE - m - L, SIZE - m, SIZE - m], fill=col)
-    img = Image.alpha_composite(img, brk)
-
-    # iOS app icons must be opaque RGB (no alpha channel)
+    # iOS app icons must be opaque RGB
     return img.convert('RGB')
 
 
