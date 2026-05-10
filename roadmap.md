@@ -8,35 +8,38 @@
 
 ## 之後想做
 
-### Stage 6:相機首頁 UI 改版 → **下一個**
-目前相機首頁太空(只有一行辨識文字 + 一顆白圓快門)。計畫加 3 區視覺元素提升精緻度與資訊密度。
+### Stage 6b:相機首頁手繪風動態元素 → **下一個**
+6a(視覺骨架,童趣手繪風)已完成。6b 把首頁從靜態升級成有「動態反應」與「累積感」。
 
-**Top 區**
-- 黑半透明往下淡出的漸層遮罩(~120 pt)— 亮背景下文字依然讀得到
-- 辨識結果從純 `UILabel` 改成毛玻璃膠囊(`UIVisualEffectView` + 圓角)
-- 結果切換用 fade 動畫,避免閃爍
+**最近記錄縮圖 strip**(底部、快門上方一條橫向滑動)
+- `UICollectionView` 或 `UIHostingController(UIScrollView)`,從 SwiftData 抓最近 10 筆記錄
+- 每張縮圖用 `Sketch` 配色裝飾(微旋 ±2°、奶油 padding、棕墨細邊)— 像剪貼簿
+- 點縮圖 → 跳到該筆 detail
+- Empty state:「還沒拍過,試試看吧 →」手寫感 placeholder
+- 首頁拍完一筆 → strip 自動更新最左
 
-**Center 區**
-- 4 角檢視框 reticle(畫面正中,約 200×200 pt,白色細線、~30% opacity)
-- 呼應 app icon 的視覺語言;告訴使用者「對準這裡會被辨識」
-- 高信心動態 pulse **不在這次範圍**
+**Reticle 高信心 pulse**
+- 影像 ML 最高信心 ≥ 0.6 時,reticle 4 個角輕微脈動(scale 1.0 → 1.06 → 1.0,1.2s 一輪)
+- 用 `CAKeyframeAnimation` on transform.scale,加 ease-in-out
+- < 0.6 自動停止
 
-**Bottom 區**
-- 對稱 top 的底部漸層遮罩
-- GPS 狀態 chip(左下,毛玻璃膠囊):`📍 已定位` / `📍 定位中` / `🚫 無位置權限`
-- 快門按鈕重做:外環 88 pt + 內實心圓 72 pt;按下時內圓彈性縮成 64 pt(類 iOS 內建相機 app 的觸感)
+**拍照 radial 暖色 flash**
+- 按下快門瞬間從畫面中央往外擴一圈暖色(`Sketch.accentWarm` → 透明)
+- ~0.3s 漸隱
+- 用一個 `CAGradientLayer` 圓形 mask 動畫
 
 **改動檔案**
-- `ViewController.swift`(主要)— 加 5 個 UI 元件 + fade animation helper + GPS 狀態同步
-- `Main.storyboard` — 移除現有 label,全部改程式建立
+- 新增 `Camera/RecentRecordsStrip.swift`(SwiftData fetch + UICollectionView 或 SwiftUI hosting)
+- 修改 `Camera/SketchUI.swift`(reticle pulse、shutter flash helper)
+- 修改 `Camera/ViewController.swift`(掛 strip、觸發 pulse / flash)
 
 **不在這次範圍**
-- 最近一筆記錄縮圖預覽(右下)— 需 SwiftData query,留下次
-- 記錄總數 badge — 同上
-- reticle 高信心動態 pulse
+- Strip 的拖拉重新排序、向左滑刪除(屬於 records tab 的事)
+- 確認頁(`CaptureReviewView`)手繪化
+- TabBar icon 換成手繪版本
 
-- 出處:Stage 5 完成後使用者反饋「首頁進去更精緻」(2026-05),plan 已對齊但尚未動工
-- Commit:單一 commit `Stage 6: 相機首頁視覺改版`
+- 出處:6a 完成後自然延伸;當初 6a/6b 拆分時對齊
+- Commit:單一 commit `Stage 6b: 首頁動態元素 + 最近記錄 strip`
 
 ### 換成 Landmark 專用 Core ML 模型
 目前 `VNClassifyImageRequest` 輸出 building / tower / church 這類通用標籤,要拿到具名地標(101、Eiffel Tower)需要換成 landmark 訓練的 `.mlmodel`。

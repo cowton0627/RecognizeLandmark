@@ -17,40 +17,64 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     var captureSession: AVCaptureSession!
     var previewLayer: AVCaptureVideoPreviewLayer!
 
-    @IBOutlet weak var recognizedLabel: UILabel!
-
     private let videoQueue = DispatchQueue(label: "videoQueue")
     private var lastClassifyTime: TimeInterval = 0
     private let classifyInterval: TimeInterval = 0.5
 
     private let locationProvider = LocationProvider()
+    private let authStatusManager = CLLocationManager()
 
     // 給拍照按鈕用的最新 frame,videoQueue 與 main 都會碰到,需要鎖
     private var latestPixelBuffer: CVPixelBuffer?
     private let stateLock = NSLock()
 
-    private lazy var captureButton: UIButton = {
-        let button = UIButton(type: .system)
-        let config = UIImage.SymbolConfiguration(pointSize: 72, weight: .regular)
-        let image = UIImage(systemName: "circle.inset.filled", withConfiguration: config)
-        button.setImage(image, for: .normal)
-        button.tintColor = .white
-        button.layer.shadowColor = UIColor.black.cgColor
-        button.layer.shadowOpacity = 0.3
-        button.layer.shadowRadius = 4
-        button.layer.shadowOffset = CGSize(width: 0, height: 2)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.addTarget(self, action: #selector(captureTapped), for: .touchUpInside)
-        return button
+    // MARK: - Sketched UI 元件(Stage 6a)
+
+    private lazy var recordsCountChip: SketchedCapsuleView = {
+        let v = SketchedCapsuleView(seed: 42)
+        v.translatesAutoresizingMaskIntoConstraints = false
+        v.isUserInteractionEnabled = true
+        v.addGestureRecognizer(UITapGestureRecognizer(target: self,
+                                                     action: #selector(recordsChipTapped)))
+        return v
+    }()
+
+    private lazy var reticleView: SketchedReticleView = {
+        let v = SketchedReticleView()
+        v.translatesAutoresizingMaskIntoConstraints = false
+        return v
+    }()
+
+    private lazy var recognitionBubble: SketchedBubbleView = {
+        let v = SketchedBubbleView()
+        v.translatesAutoresizingMaskIntoConstraints = false
+        v.setText("(對準景點看看)")
+        return v
+    }()
+
+    private lazy var gpsChip: SketchedCapsuleView = {
+        let v = SketchedCapsuleView(seed: 99)
+        v.translatesAutoresizingMaskIntoConstraints = false
+        return v
+    }()
+
+    private lazy var captureButton: SketchedShutterView = {
+        let b = SketchedShutterView()
+        b.translatesAutoresizingMaskIntoConstraints = false
+        b.addTarget(self, action: #selector(captureTapped), for: .touchUpInside)
+        return b
     }()
 
     private lazy var toastLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textAlignment = .center
-        label.textColor = .white
-        label.backgroundColor = UIColor.black.withAlphaComponent(0.7)
+        label.textColor = Sketch.ink
+        label.backgroundColor = Sketch.paper.withAlphaComponent(0.95)
+        label.font = Sketch.font(size: 14)
         label.layer.cornerRadius = 10
+        label.layer.borderColor = Sketch.ink.cgColor
+        label.layer.borderWidth = 1.5
         label.layer.masksToBounds = true
         label.numberOfLines = 0
         label.alpha = 0
@@ -87,10 +111,18 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         view.layer.insertSublayer(previewLayer, at: 0)
 
         setupOverlay()
+        refreshRecordsCount()
+        refreshGPSChip()
 
         DispatchQueue.global(qos: .background).async {
             self.captureSession.startRunning()
         }
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        refreshRecordsCount()
+        refreshGPSChip()
     }
 
     override func viewDidLayoutSubviews() {
@@ -99,20 +131,73 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     }
 
     private func setupOverlay() {
+        view.addSubview(reticleView)
+        view.addSubview(recognitionBubble)
+        view.addSubview(recordsCountChip)
+        view.addSubview(gpsChip)
         view.addSubview(captureButton)
         view.addSubview(toastLabel)
 
         NSLayoutConstraint.activate([
+            // 中央 reticle(略偏上)
+            reticleView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            reticleView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -40),
+            reticleView.widthAnchor.constraint(equalToConstant: 200),
+            reticleView.heightAnchor.constraint(equalToConstant: 200),
+
+            // 辨識結果膠囊在 reticle 下方
+            recognitionBubble.topAnchor.constraint(equalTo: reticleView.bottomAnchor, constant: 28),
+            recognitionBubble.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            recognitionBubble.widthAnchor.constraint(lessThanOrEqualTo: view.widthAnchor, multiplier: 0.78),
+            recognitionBubble.widthAnchor.constraint(greaterThanOrEqualToConstant: 220),
+
+            // 記錄數 chip 右上
+            recordsCountChip.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 12),
+            recordsCountChip.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
+
+            // GPS chip 左下、在快門上方
+            gpsChip.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
+            gpsChip.bottomAnchor.constraint(equalTo: captureButton.topAnchor, constant: -8),
+
+            // 快門按鈕
             captureButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             captureButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -32),
             captureButton.widthAnchor.constraint(equalToConstant: 88),
             captureButton.heightAnchor.constraint(equalToConstant: 88),
 
+            // toast(沿用、改為 sketch 樣式)
             toastLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            toastLabel.bottomAnchor.constraint(equalTo: captureButton.topAnchor, constant: -16),
+            toastLabel.bottomAnchor.constraint(equalTo: gpsChip.topAnchor, constant: -10),
             toastLabel.widthAnchor.constraint(lessThanOrEqualTo: view.widthAnchor, multiplier: 0.85),
             toastLabel.heightAnchor.constraint(greaterThanOrEqualToConstant: 40),
         ])
+    }
+
+    // MARK: - Sketched UI 狀態同步
+
+    private func refreshRecordsCount() {
+        let context = Persistence.container.mainContext
+        let descriptor = FetchDescriptor<LandmarkRecord>()
+        let count = (try? context.fetchCount(descriptor)) ?? 0
+        let text = count == 0 ? "還沒記錄 ✏️" : "已記錄 \(count) 個 📚"
+        recordsCountChip.setText(text)
+    }
+
+    private func refreshGPSChip() {
+        let text: String
+        switch authStatusManager.authorizationStatus {
+        case .authorizedWhenInUse, .authorizedAlways:
+            text = "📍 已定位"
+        case .denied, .restricted:
+            text = "🚫 無位置權限"
+        default:
+            text = "📍 尚未授權"
+        }
+        gpsChip.setText(text)
+    }
+
+    @objc private func recordsChipTapped() {
+        tabBarController?.selectedIndex = 1
     }
 
     func captureOutput(_ output: AVCaptureOutput,
@@ -139,7 +224,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
                 .joined(separator: "\n")
 
             DispatchQueue.main.async {
-                self.recognizedLabel.text = top.isEmpty ? "(無辨識結果)" : top
+                self.recognitionBubble.setText(top.isEmpty ? "(對準景點看看)" : top)
             }
         }
 
@@ -252,6 +337,8 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             context.insert(record)
             try context.save()
             showToast("已儲存「\(name)」")
+            refreshRecordsCount()
+            refreshGPSChip()
         } catch {
             showToast("儲存失敗:\(error.localizedDescription)")
         }
