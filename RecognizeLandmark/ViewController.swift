@@ -9,6 +9,8 @@ import AVFoundation
 import UIKit
 import Vision
 import SwiftData
+import SwiftUI
+import CoreLocation
 
 class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate {
 
@@ -23,9 +25,8 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
 
     private let locationProvider = LocationProvider()
 
-    // 給拍照按鈕用的最新 frame / 分類結果,videoQueue 與 main 都會碰到,需要鎖
+    // 給拍照按鈕用的最新 frame,videoQueue 與 main 都會碰到,需要鎖
     private var latestPixelBuffer: CVPixelBuffer?
-    private var latestClassification: (name: String, confidence: Double)?
     private let stateLock = NSLock()
 
     private lazy var captureButton: UIButton = {
@@ -137,12 +138,6 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
                 .map { String(format: "%@  %.0f%%", $0.identifier, $0.confidence * 100) }
                 .joined(separator: "\n")
 
-            if let best = filtered.first {
-                self.stateLock.lock()
-                self.latestClassification = (best.identifier, Double(best.confidence))
-                self.stateLock.unlock()
-            }
-
             DispatchQueue.main.async {
                 self.recognizedLabel.text = top.isEmpty ? "(無辨識結果)" : top
             }
@@ -161,14 +156,12 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     @objc private func captureTapped() {
         stateLock.lock()
         let pixelBuffer = latestPixelBuffer
-        let classification = latestClassification
         stateLock.unlock()
 
-        guard let pixelBuffer, let classification else {
-            showToast("尚未取得辨識結果,請稍候")
+        guard let pixelBuffer else {
+            showToast("尚未取得畫面,請稍候")
             return
         }
-
         guard let image = makeUIImage(from: pixelBuffer) else {
             showToast("照片擷取失敗")
             return
@@ -176,29 +169,91 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
 
         captureButton.isEnabled = false
 
+        // 暫停 capture session,避免 review 期間背景繼續跑 Vision
+        let session = captureSession!
+        DispatchQueue.global(qos: .userInitiated).async {
+            session.stopRunning()
+        }
+
         Task { @MainActor [weak self] in
             guard let self else { return }
             let location = await self.locationProvider.currentLocation()
+            async let mlCandidates = CaptureClassifier.classify(image)
+            async let placeCandidates: [CaptureCandidate] = {
+                guard let location else { return [] }
+                return await PlaceLookup.lookup(location)
+            }()
 
-            do {
-                let filename = try PhotoStorage.shared.save(image)
-                let record = LandmarkRecord(
-                    recognizedName: classification.name,
-                    confidence: classification.confidence,
-                    photoFilename: filename,
-                    latitude: location?.coordinate.latitude,
-                    longitude: location?.coordinate.longitude
-                )
-                let context = Persistence.container.mainContext
-                context.insert(record)
-                try context.save()
+            let merged = await self.mergeCandidates(place: placeCandidates,
+                                                    image: mlCandidates)
+            self.presentReview(image: image, candidates: merged, location: location)
+        }
+    }
 
-                let locationHint = location == nil ? "(無位置)" : ""
-                self.showToast("已儲存「\(classification.name)」\(locationHint)")
-            } catch {
-                self.showToast("儲存失敗:\(error.localizedDescription)")
+    private func mergeCandidates(place: [CaptureCandidate],
+                                 image: [CaptureCandidate]) -> [CaptureCandidate] {
+        var seen = Set<String>()
+        return (place + image).filter { seen.insert($0.name).inserted }
+    }
+
+    private func presentReview(image: UIImage,
+                               candidates: [CaptureCandidate],
+                               location: CLLocation?) {
+        let review = CaptureReviewView(
+            image: image,
+            candidates: candidates,
+            location: location,
+            onConfirm: { [weak self] name, confidence, note in
+                self?.dismissReviewAndResume {
+                    self?.saveRecord(image: image,
+                                     name: name,
+                                     confidence: confidence,
+                                     note: note,
+                                     location: location)
+                }
+            },
+            onCancel: { [weak self] in
+                self?.dismissReviewAndResume(then: nil)
+            }
+        )
+        let host = UIHostingController(rootView: review)
+        host.modalPresentationStyle = .fullScreen
+        present(host, animated: true)
+    }
+
+    private func dismissReviewAndResume(then: (() -> Void)?) {
+        dismiss(animated: true) { [weak self] in
+            guard let self else { return }
+            let session = self.captureSession!
+            DispatchQueue.global(qos: .userInitiated).async {
+                session.startRunning()
             }
             self.captureButton.isEnabled = true
+            then?()
+        }
+    }
+
+    private func saveRecord(image: UIImage,
+                            name: String,
+                            confidence: Double,
+                            note: String,
+                            location: CLLocation?) {
+        do {
+            let filename = try PhotoStorage.shared.save(image)
+            let record = LandmarkRecord(
+                recognizedName: name,
+                confidence: confidence,
+                photoFilename: filename,
+                latitude: location?.coordinate.latitude,
+                longitude: location?.coordinate.longitude,
+                note: note
+            )
+            let context = Persistence.container.mainContext
+            context.insert(record)
+            try context.save()
+            showToast("已儲存「\(name)」")
+        } catch {
+            showToast("儲存失敗:\(error.localizedDescription)")
         }
     }
 
