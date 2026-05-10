@@ -10,6 +10,8 @@ struct RecordsListView: View {
     @Query(sort: \LandmarkRecord.timestamp, order: .reverse)
     private var records: [LandmarkRecord]
 
+    @Environment(\.modelContext) private var modelContext
+
     var body: some View {
         NavigationStack {
             Group {
@@ -22,14 +24,34 @@ struct RecordsListView: View {
                 } else {
                     List {
                         ForEach(records) { record in
-                            RecordRow(record: record)
+                            NavigationLink(value: record) {
+                                RecordRow(record: record)
+                            }
+                            .swipeActions(edge: .trailing) {
+                                Button(role: .destructive) {
+                                    deleteRecord(record)
+                                } label: {
+                                    Label("刪除", systemImage: "trash")
+                                }
+                            }
                         }
                     }
                     .listStyle(.plain)
                 }
             }
             .navigationTitle("我的記錄")
+            .navigationDestination(for: LandmarkRecord.self) { record in
+                RecordDetailView(record: record)
+            }
         }
+    }
+
+    private func deleteRecord(_ record: LandmarkRecord) {
+        let filename = record.photoFilename
+        Task.detached(priority: .utility) {
+            try? PhotoStorage.shared.delete(filename)
+        }
+        modelContext.delete(record)
     }
 }
 
