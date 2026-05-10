@@ -5,7 +5,7 @@
 從 repo 根目錄執行:
     python3 tools/make_icon.py
 
-預設會覆蓋 RecognizeLandmark/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png。
+預設會覆蓋 RecognizeLandmark/Resources/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png。
 依賴:Pillow(pip install Pillow)。
 """
 import math
@@ -156,7 +156,7 @@ def make_icon():
 if __name__ == '__main__':
     icon = make_icon()
     repo_root = Path(__file__).resolve().parent.parent
-    out = repo_root / 'RecognizeLandmark' / 'Assets.xcassets' / \
+    out = repo_root / 'RecognizeLandmark' / 'Resources' / 'Assets.xcassets' / \
         'AppIcon.appiconset' / 'AppIcon-1024.png'
     icon.save(out, 'PNG', optimize=True)
     print(f'wrote {out}')

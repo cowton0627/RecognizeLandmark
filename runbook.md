@@ -15,13 +15,15 @@ File → Add Files to "RecognizeLandmark"... → 選檔 → 確認 Target Member
 要在 4 個 section 同時加(否則 SourceKit 會報 "Cannot find type" 之類的錯,build 也會缺檔):
 
 1. `PBXBuildFile` — 加 `XXX in Sources` 的條目
-2. `PBXFileReference` — 加檔案參考
-3. `PBXGroup`(`RecognizeLandmark` group children)— 讓 Xcode 看得到
+2. `PBXFileReference` — 加檔案參考(只放檔名,例如 `path = MyView.swift`,parent group 已設好資料夾路徑)
+3. `PBXGroup` — 加進**對應功能資料夾的 group**(`App` / `Camera` / `CaptureReview` / `Records` / `Storage` / `Services`),不要直接掛在 `RecognizeLandmark` group 下
 4. `PBXSourcesBuildPhase`(`Sources` build phase 的 files 列)— 加進編譯
 
-**UUID 規則**:照現有命名 `915D5DXX2CA6A2D000162B3B`,XX 每次 +2(一個給 buildFile,一個給 fileRef)。最近用到的對見 `git log -p RecognizeLandmark.xcodeproj/project.pbxproj`。
+**UUID 規則**:檔案 UUID 照現有命名 `915D5DXX2CA6A2D000162B3B`,XX 每次 +2(一個給 buildFile,一個給 fileRef)。最近用到的對見 `git log -p RecognizeLandmark.xcodeproj/project.pbxproj`。
 
-參考 commit:Stage 4(`03ac987`)、Stage 5(`e333bff`)。
+參考 commit:
+- 加單檔到既有 group:Stage 4(`03ac987`)、Stage 5(`e333bff`)
+- 整批分資料夾的 group 結構:看最近一個 `refactor:` 前綴的 commit
 
 ---
 
@@ -31,7 +33,7 @@ File → Add Files to "RecognizeLandmark"... → 選檔 → 確認 Target Member
 python3 tools/make_icon.py
 ```
 
-會直接覆蓋 `RecognizeLandmark/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png`,Xcode 下次 build 就會用新版。要改顏色 / 造型直接改 `tools/make_icon.py` 上面那幾個常數(`top` / `mid` / `bot` / 塔的 width 參數等)。
+會直接覆蓋 `RecognizeLandmark/Resources/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png`,Xcode 下次 build 就會用新版。要改顏色 / 造型直接改 `tools/make_icon.py` 上面那幾個常數(`top` / `mid` / `bot` / 塔的 width 參數等)。
 
 依賴:`pip install Pillow`。
 
@@ -65,7 +67,7 @@ grep -A 1 "initWith" "$SDK/System/Library/Frameworks/MapKit.framework/Headers/MK
 ## 查 PNG 是否真的變了(避免重跑 script 但其實沒變)
 
 ```bash
-shasum -a 256 RecognizeLandmark/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png
+shasum -a 256 RecognizeLandmark/Resources/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png
 ```
 
 `tools/make_icon.py` 是 deterministic 的,沒改參數重跑會產生 byte-identical PNG。

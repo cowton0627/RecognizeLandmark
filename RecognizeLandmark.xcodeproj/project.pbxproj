@@ -76,25 +76,81 @@
 		915D5DAA2CA6A29700162B3B /* RecognizeLandmark */ = {
 			isa = PBXGroup;
 			children = (
-				915D5DAB2CA6A29700162B3B /* AppDelegate.swift */,
-				915D5DAD2CA6A29700162B3B /* SceneDelegate.swift */,
-				915D5DAF2CA6A29700162B3B /* ViewController.swift */,
-				915D5DC02CA6A2D000162B3B /* LandmarkRecord.swift */,
-				915D5DC22CA6A2D000162B3B /* PhotoStorage.swift */,
-				915D5DC42CA6A2D000162B3B /* LocationProvider.swift */,
-				915D5DC62CA6A2D000162B3B /* Persistence.swift */,
-				915D5DC82CA6A2D000162B3B /* RecordsListView.swift */,
-				915D5DCA2CA6A2D000162B3B /* RecordDetailView.swift */,
-				915D5DCC2CA6A2D000162B3B /* CaptureCandidate.swift */,
-				915D5DCE2CA6A2D000162B3B /* PlaceLookup.swift */,
-				915D5DD02CA6A2D000162B3B /* CaptureClassifier.swift */,
-				915D5DD22CA6A2D000162B3B /* CaptureReviewView.swift */,
-				915D5DB12CA6A29700162B3B /* Main.storyboard */,
-				915D5DB42CA6A29900162B3B /* Assets.xcassets */,
-				915D5DB62CA6A29900162B3B /* LaunchScreen.storyboard */,
-				915D5DB92CA6A29900162B3B /* Info.plist */,
+				915D5DE12CA6A2D000162B3B /* App */,
+				915D5DE22CA6A2D000162B3B /* Camera */,
+				915D5DE32CA6A2D000162B3B /* CaptureReview */,
+				915D5DE42CA6A2D000162B3B /* Records */,
+				915D5DE52CA6A2D000162B3B /* Storage */,
+				915D5DE62CA6A2D000162B3B /* Services */,
+				915D5DE72CA6A2D000162B3B /* Resources */,
 			);
 			path = RecognizeLandmark;
+			sourceTree = "<group>";
+		};
+		915D5DE12CA6A2D000162B3B /* App */ = {
+			isa = PBXGroup;
+			children = (
+				915D5DAB2CA6A29700162B3B /* AppDelegate.swift */,
+				915D5DAD2CA6A29700162B3B /* SceneDelegate.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		915D5DE22CA6A2D000162B3B /* Camera */ = {
+			isa = PBXGroup;
+			children = (
+				915D5DAF2CA6A29700162B3B /* ViewController.swift */,
+			);
+			path = Camera;
+			sourceTree = "<group>";
+		};
+		915D5DE32CA6A2D000162B3B /* CaptureReview */ = {
+			isa = PBXGroup;
+			children = (
+				915D5DCC2CA6A2D000162B3B /* CaptureCandidate.swift */,
+				915D5DD02CA6A2D000162B3B /* CaptureClassifier.swift */,
+				915D5DCE2CA6A2D000162B3B /* PlaceLookup.swift */,
+				915D5DD22CA6A2D000162B3B /* CaptureReviewView.swift */,
+			);
+			path = CaptureReview;
+			sourceTree = "<group>";
+		};
+		915D5DE42CA6A2D000162B3B /* Records */ = {
+			isa = PBXGroup;
+			children = (
+				915D5DC82CA6A2D000162B3B /* RecordsListView.swift */,
+				915D5DCA2CA6A2D000162B3B /* RecordDetailView.swift */,
+			);
+			path = Records;
+			sourceTree = "<group>";
+		};
+		915D5DE52CA6A2D000162B3B /* Storage */ = {
+			isa = PBXGroup;
+			children = (
+				915D5DC02CA6A2D000162B3B /* LandmarkRecord.swift */,
+				915D5DC62CA6A2D000162B3B /* Persistence.swift */,
+				915D5DC22CA6A2D000162B3B /* PhotoStorage.swift */,
+			);
+			path = Storage;
+			sourceTree = "<group>";
+		};
+		915D5DE62CA6A2D000162B3B /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				915D5DC42CA6A2D000162B3B /* LocationProvider.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		915D5DE72CA6A2D000162B3B /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				915D5DB12CA6A29700162B3B /* Main.storyboard */,
+				915D5DB62CA6A29900162B3B /* LaunchScreen.storyboard */,
+				915D5DB42CA6A29900162B3B /* Assets.xcassets */,
+				915D5DB92CA6A29900162B3B /* Info.plist */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -337,7 +393,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = RecognizeLandmark/Info.plist;
+				INFOPLIST_FILE = RecognizeLandmark/Resources/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -363,7 +419,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = RecognizeLandmark/Info.plist;
+				INFOPLIST_FILE = RecognizeLandmark/Resources/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";

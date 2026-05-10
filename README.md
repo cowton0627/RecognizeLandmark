@@ -62,31 +62,31 @@ RecognizeLandmark/
 ├── tools/
 │   └── make_icon.py                  # 用 Pillow 重新產生 1024x1024 app icon
 └── RecognizeLandmark/
-    ├── AppDelegate.swift
-    ├── SceneDelegate.swift           # 程式建立 TabBarController(相機 / 記錄)
-    ├── ViewController.swift          # 相機 + 即時 HUD 辨識 + 拍照流程
-    │
-    │   # 拍照確認流程
-    ├── CaptureCandidate.swift        # 候選資料模型(POI / geocode / image / fallback)
-    ├── CaptureClassifier.swift       # 一次性影像 ML(換 Core ML 地標模型只動這支)
-    ├── PlaceLookup.swift             # MKLocalSearch + CLGeocoder
-    ├── CaptureReviewView.swift       # SwiftUI 確認頁(大圖 / chip / 地圖 / 筆記)
-    │
-    │   # 資料層
-    ├── LandmarkRecord.swift          # SwiftData @Model:時間/名稱/信心/座標/筆記
-    ├── Persistence.swift             # SwiftData ModelContainer 共用
-    ├── PhotoStorage.swift            # Documents/photos/ 下的 JPEG 自管儲存
-    ├── LocationProvider.swift        # CoreLocation 取當下座標
-    │
-    │   # 記錄列表 UI
-    ├── RecordsListView.swift         # SwiftUI 記錄列表(@Query)
-    ├── RecordDetailView.swift        # SwiftUI 詳情頁(大圖 / Map / 筆記 / 刪除)
-    │
-    ├── Base.lproj/
-    │   ├── Main.storyboard           # 相機畫面 UI(含 recognizedLabel)
-    │   └── LaunchScreen.storyboard
-    ├── Assets.xcassets/              # 含 AppIcon.appiconset(1024x1024 PNG)
-    └── Info.plist                    # NSCameraUsageDescription / NSLocationWhenInUseUsageDescription
+    ├── App/
+    │   ├── AppDelegate.swift
+    │   └── SceneDelegate.swift       # 程式建立 TabBarController(相機 / 記錄)
+    ├── Camera/
+    │   └── ViewController.swift      # 相機 + 即時 HUD 辨識 + 拍照流程
+    ├── CaptureReview/                # 拍照後的確認頁流程
+    │   ├── CaptureCandidate.swift    # 候選資料模型(POI / geocode / image / fallback)
+    │   ├── CaptureClassifier.swift   # 一次性影像 ML(換 Core ML 地標模型只動這支)
+    │   ├── PlaceLookup.swift         # MKLocalSearch + CLGeocoder
+    │   └── CaptureReviewView.swift   # SwiftUI 確認頁(大圖 / chip / 地圖 / 筆記)
+    ├── Records/                      # 記錄列表 + 詳情
+    │   ├── RecordsListView.swift     # SwiftUI 記錄列表(@Query)
+    │   └── RecordDetailView.swift    # SwiftUI 詳情頁(大圖 / Map / 筆記 / 刪除)
+    ├── Storage/                      # 資料層
+    │   ├── LandmarkRecord.swift      # SwiftData @Model:時間/名稱/信心/座標/筆記
+    │   ├── Persistence.swift         # SwiftData ModelContainer 共用
+    │   └── PhotoStorage.swift        # Documents/photos/ 下的 JPEG 自管儲存
+    ├── Services/                     # 系統 wrapper
+    │   └── LocationProvider.swift    # CoreLocation 取當下座標
+    └── Resources/
+        ├── Base.lproj/
+        │   ├── Main.storyboard       # 相機畫面 UI(含 recognizedLabel)
+        │   └── LaunchScreen.storyboard
+        ├── Assets.xcassets/          # 含 AppIcon.appiconset(1024x1024 PNG)
+        └── Info.plist                # NSCameraUsageDescription / NSLocationWhenInUseUsageDescription
 ```
 
 ---
@@ -125,4 +125,4 @@ RecognizeLandmark/
 python3 tools/make_icon.py
 ```
 
-執行後會直接覆蓋 `RecognizeLandmark/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png`,Xcode 下次 build 就會用新版。
+執行後會直接覆蓋 `RecognizeLandmark/Resources/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png`,Xcode 下次 build 就會用新版。
