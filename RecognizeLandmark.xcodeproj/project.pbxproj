@@ -27,8 +27,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		915D5DF02CA6A2D000162B3B /* Signing.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Signing.xcconfig; sourceTree = "<group>"; };
-		915D5DF12CA6A2D000162B3B /* Signing.local.xcconfig.example */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Signing.local.xcconfig.example; sourceTree = "<group>"; };
 		915D5DA82CA6A29700162B3B /* RecognizeLandmark.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RecognizeLandmark.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		915D5DAB2CA6A29700162B3B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		915D5DAD2CA6A29700162B3B /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -48,6 +46,8 @@
 		915D5DD02CA6A2D000162B3B /* CaptureClassifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureClassifier.swift; sourceTree = "<group>"; };
 		915D5DD22CA6A2D000162B3B /* CaptureReviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureReviewView.swift; sourceTree = "<group>"; };
 		915D5DD42CA6A2D000162B3B /* SketchUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SketchUI.swift; sourceTree = "<group>"; };
+		915D5DF02CA6A2D000162B3B /* Signing.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Signing.xcconfig; sourceTree = "<group>"; };
+		915D5DF12CA6A2D000162B3B /* Signing.local.xcconfig.example */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Signing.local.xcconfig.example; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,15 +68,6 @@
 				915D5DAA2CA6A29700162B3B /* RecognizeLandmark */,
 				915D5DA92CA6A29700162B3B /* Products */,
 			);
-			sourceTree = "<group>";
-		};
-		915D5DEF2CA6A2D000162B3B /* Config */ = {
-			isa = PBXGroup;
-			children = (
-				915D5DF02CA6A2D000162B3B /* Signing.xcconfig */,
-				915D5DF12CA6A2D000162B3B /* Signing.local.xcconfig.example */,
-			);
-			path = Config;
 			sourceTree = "<group>";
 		};
 		915D5DA92CA6A29700162B3B /* Products */ = {
@@ -166,6 +157,15 @@
 				915D5DB92CA6A29900162B3B /* Info.plist */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		915D5DEF2CA6A2D000162B3B /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				915D5DF02CA6A2D000162B3B /* Signing.xcconfig */,
+				915D5DF12CA6A2D000162B3B /* Signing.local.xcconfig.example */,
+			);
+			path = Config;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
