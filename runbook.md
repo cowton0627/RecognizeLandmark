@@ -45,8 +45,8 @@ File → Add Files to "RecognizeLandmark"... → 選檔 → 確認 Target Member
 
 **UUID 規則**:檔案 UUID 照現有命名 `915D5DXX2CA6A2D000162B3B`,XX 每次 +2(一個給 buildFile,一個給 fileRef)。最近用到的對見 `git log -p RecognizeLandmark.xcodeproj/project.pbxproj`。
 
-參考 commit:
-- 加單檔到既有 group:Stage 4(`03ac987`)、Stage 5(`e333bff`)
+參考 commit(用 `git log --grep="Stage X"` 找;不寫死 SHA 是因為 SHA 在 force push 後可能失效):
+- 加單檔到既有 group:`Stage 4: 記錄詳情頁 + 刪除流程`、`Stage 5: 拍照確認頁 + 多來源候選名稱`
 - 整批分資料夾的 group 結構:看最近一個 `refactor:` 前綴的 commit
 
 ---
