@@ -33,9 +33,28 @@
    ```
 
 2. 在 Xcode 上方選擇你的 iPhone 作為執行目標(模擬器無法用相機)。
-3. 第一次 build 之前,在 `Signing & Capabilities` 設定你自己的 Team。
+3. 第一次 build 之前,設定你自己的 signing:
+
+   ```bash
+   cp Config/Signing.local.xcconfig.example Config/Signing.local.xcconfig
+   ```
+
+   然後編輯 `Config/Signing.local.xcconfig`:
+
+   ```xcconfig
+   DEVELOPMENT_TEAM = YOUR_TEAM_ID
+   PRODUCT_BUNDLE_IDENTIFIER = com.yourname.RecognizeLandmark
+   ```
+
+   `Signing.local.xcconfig` 已被 git 忽略,不會把個人 Team ID 或 bundle id commit 進公開 repo。也可以直接在 Xcode 的 `Signing & Capabilities` 選自己的 Team;若 Xcode 改到專案檔,請確認不要把個人簽章資訊提交出去。
 4. 按 `⌘R` 執行。
 5. App 啟動後會依序請求相機與位置權限,允許後即可開始使用。
+
+### Signing 疑難排解
+
+- `Signing for "RecognizeLandmark" requires a development team`:尚未設定 `DEVELOPMENT_TEAM`;請建立 `Config/Signing.local.xcconfig` 或在 Xcode 選 Team。
+- `Bundle identifier ... is not available`:請把 `PRODUCT_BUNDLE_IDENTIFIER` 改成你帳號底下唯一的值。
+- 公開版預設使用 `com.example.RecognizeLandmark`,只適合作為 clone 後的安全預設值;實機執行通常需要改成自己的 bundle id。
 
 ---
 

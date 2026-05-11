@@ -27,6 +27,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		915D5DF02CA6A2D000162B3B /* Signing.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Signing.xcconfig; sourceTree = "<group>"; };
+		915D5DF12CA6A2D000162B3B /* Signing.local.xcconfig.example */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Signing.local.xcconfig.example; sourceTree = "<group>"; };
 		915D5DA82CA6A29700162B3B /* RecognizeLandmark.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RecognizeLandmark.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		915D5DAB2CA6A29700162B3B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		915D5DAD2CA6A29700162B3B /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -62,9 +64,19 @@
 		915D5D9F2CA6A29700162B3B = {
 			isa = PBXGroup;
 			children = (
+				915D5DEF2CA6A2D000162B3B /* Config */,
 				915D5DAA2CA6A29700162B3B /* RecognizeLandmark */,
 				915D5DA92CA6A29700162B3B /* Products */,
 			);
+			sourceTree = "<group>";
+		};
+		915D5DEF2CA6A2D000162B3B /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				915D5DF02CA6A2D000162B3B /* Signing.xcconfig */,
+				915D5DF12CA6A2D000162B3B /* Signing.local.xcconfig.example */,
+			);
+			path = Config;
 			sourceTree = "<group>";
 		};
 		915D5DA92CA6A29700162B3B /* Products */ = {
@@ -268,6 +280,7 @@
 /* Begin XCBuildConfiguration section */
 		915D5DBA2CA6A29900162B3B /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 915D5DF02CA6A2D000162B3B /* Signing.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -301,7 +314,6 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = "";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -333,6 +345,7 @@
 		};
 		915D5DBB2CA6A29900162B3B /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 915D5DF02CA6A2D000162B3B /* Signing.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -366,7 +379,6 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = "";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -391,6 +403,7 @@
 		};
 		915D5DBD2CA6A29900162B3B /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 915D5DF02CA6A2D000162B3B /* Signing.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -407,7 +420,6 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.example.RecognizeLandmark;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -417,6 +429,7 @@
 		};
 		915D5DBE2CA6A29900162B3B /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 915D5DF02CA6A2D000162B3B /* Signing.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -433,7 +446,6 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.example.RecognizeLandmark;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;

@@ -30,3 +30,6 @@ Carthage/Build/
 *.env
 .env.*
 !.env.example
+
+# Local Xcode signing overrides
+Config/Signing.local.xcconfig

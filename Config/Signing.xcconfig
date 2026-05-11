@@ -1,0 +1,9 @@
+// Public signing defaults.
+//
+// For local device builds, create Config/Signing.local.xcconfig with your own
+// DEVELOPMENT_TEAM and PRODUCT_BUNDLE_IDENTIFIER. That file is gitignored.
+
+DEVELOPMENT_TEAM =
+PRODUCT_BUNDLE_IDENTIFIER = com.example.RecognizeLandmark
+
+#include? "Signing.local.xcconfig"
