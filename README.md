@@ -125,6 +125,18 @@ RecognizeLandmark/
 
 ---
 
+## 隱私
+
+這個 App 完全在本機運作:沒有自己的後端、沒有 analytics 或 tracking SDK、不會把你的照片或位置上傳到任何遠端伺服器。
+
+- **相機**:畫面僅用於即時辨識 HUD 與拍照,不錄影、不外送。
+- **位置**:只在按下快門時取一次當下座標,記在那筆記錄上;拒絕位置權限也能正常使用。
+- **照片**:存在 App 本機沙盒(`Documents/photos/`),刪除記錄時連同照片檔一起刪除。
+- **記錄 metadata**:存在本機 SwiftData,不外送。
+- **Apple 系統服務**:拍照時會用 `MKLocalSearch`(附近 POI 搜尋)與 `CLGeocoder`(反向地理編碼),這兩個是 Apple 提供的系統服務,座標會送到 Apple 處理,依 Apple 隱私政策處理。
+
+---
+
 ## 替換成地標模型
 
 要從通用分類換成具名地標辨識:
@@ -145,3 +157,11 @@ python3 tools/make_icon.py
 ```
 
 執行後會直接覆蓋 `RecognizeLandmark/Resources/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png`,Xcode 下次 build 就會用新版。
+
+---
+
+## 授權
+
+本專案以 MIT License 授權,完整條款見 [LICENSE](./LICENSE)。
+
+App 本體沒有第三方 runtime 相依,只用 Apple 系統 framework(Vision / AVFoundation / MapKit / CoreLocation / SwiftData / SwiftUI / UIKit)。`tools/make_icon.py` 僅在開發端執行,使用 [Pillow](https://python-pillow.org/)(HPND License)。
