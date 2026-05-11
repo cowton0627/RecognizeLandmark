@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+# 擋住把 Apple Developer Team ID 寫進 repo 的 commit。
+#
+# Xcode UI 在 Signing & Capabilities 選 Team 時,會把 10 碼 Team ID
+# 寫進 project.pbxproj 的 buildSettings。這個 hook 在 commit 前掃描
+# staged 的 .pbxproj / .xcconfig,只要含 `DEVELOPMENT_TEAM = <10 碼大寫英數>`
+# 就拒絕 commit。
+#
+# 安裝:在 repo root 執行一次 `git config core.hooksPath .githooks`。
+
+set -euo pipefail
+
+files=$(git diff --cached --name-only --diff-filter=ACM \
+  | grep -E '\.(pbxproj|xcconfig)$' || true)
+
+if [ -z "$files" ]; then
+  exit 0
+fi
+
+hit=0
+while IFS= read -r f; do
+  [ -z "$f" ] && continue
+  content=$(git show ":$f" 2>/dev/null || true)
+  bad=$(printf '%s\n' "$content" \
+    | grep -nE 'DEVELOPMENT_TEAM[[:space:]]*=[[:space:]]*[A-Z0-9]{10}\b' || true)
+  if [ -n "$bad" ]; then
+    if [ $hit -eq 0 ]; then
+      echo "✘ pre-commit: 偵測到 Apple Developer Team ID,拒絕 commit。" >&2
+      echo "  Team ID 應該只放在 gitignored 的 Config/Signing.local.xcconfig。" >&2
+      echo "" >&2
+    fi
+    echo "[$f]" >&2
+    echo "$bad" >&2
+    echo "" >&2
+    hit=1
+  fi
+done <<< "$files"
+
+if [ $hit -ne 0 ]; then
+  echo "處理方式:" >&2
+  echo "  1. 從檔案移除 DEVELOPMENT_TEAM = <10 碼> 那幾行" >&2
+  echo "  2. Team ID 改放在 Config/Signing.local.xcconfig(已 gitignored)" >&2
+  echo "  3. 重新 git add 後再 commit" >&2
+  echo "" >&2
+  echo "若確認是誤判,可用 --no-verify 跳過(不建議)。" >&2
+  exit 1
+fi
+
+exit 0

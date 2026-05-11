@@ -4,6 +4,30 @@
 
 ---
 
+## 啟用 pre-commit hook(clone 後第一件事)
+
+repo 內 `.githooks/pre-commit` 會擋住把 Apple Developer Team ID(10 碼大寫英數)寫進 `*.pbxproj` 或 `*.xcconfig` 的 commit。Git hook 預設不會自動啟用,clone 後要設一次:
+
+```bash
+git config core.hooksPath .githooks
+```
+
+驗證:
+
+```bash
+git config core.hooksPath
+# 應該輸出 .githooks
+```
+
+**為什麼需要**:Xcode 在 GUI 選 Team 時會把 Team ID 寫進 `project.pbxproj` 的 `buildSettings`(優先序高於 `Signing.xcconfig`)。沒這個 hook 就只能靠 push 前自己 grep,容易漏。
+
+Team ID 真正該放的位置是 gitignored 的 `Config/Signing.local.xcconfig`。
+
+要關掉 hook(不建議):`git config --unset core.hooksPath`。
+單次跳過:`git commit --no-verify`(只在誤判時用)。
+
+---
+
 ## 加新的 Swift 檔到 Xcode 專案
 
 兩種做法:
