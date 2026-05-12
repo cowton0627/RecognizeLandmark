@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -27,6 +27,16 @@
 		915D5DF32CA6A2D000162B3B /* CaptureFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 915D5DF22CA6A2D000162B3B /* CaptureFlow.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		918673C82FB2BA05001CE5F4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 915D5DA02CA6A29700162B3B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 915D5DA72CA6A29700162B3B;
+			remoteInfo = RecognizeLandmark;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		915D5DA82CA6A29700162B3B /* RecognizeLandmark.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RecognizeLandmark.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		915D5DAB2CA6A29700162B3B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -47,13 +57,25 @@
 		915D5DD02CA6A2D000162B3B /* CaptureClassifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureClassifier.swift; sourceTree = "<group>"; };
 		915D5DD22CA6A2D000162B3B /* CaptureReviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureReviewView.swift; sourceTree = "<group>"; };
 		915D5DD42CA6A2D000162B3B /* SketchUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SketchUI.swift; sourceTree = "<group>"; };
-		915D5DF22CA6A2D000162B3B /* CaptureFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureFlow.swift; sourceTree = "<group>"; };
 		915D5DF02CA6A2D000162B3B /* Signing.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Signing.xcconfig; sourceTree = "<group>"; };
 		915D5DF12CA6A2D000162B3B /* Signing.local.xcconfig.example */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Signing.local.xcconfig.example; sourceTree = "<group>"; };
+		915D5DF22CA6A2D000162B3B /* CaptureFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureFlow.swift; sourceTree = "<group>"; };
+		918673C42FB2BA05001CE5F4 /* RecognizeLandmarkTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RecognizeLandmarkTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		918673C52FB2BA05001CE5F4 /* RecognizeLandmarkTests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = RecognizeLandmarkTests; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		915D5DA52CA6A29700162B3B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		918673C12FB2BA05001CE5F4 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -68,6 +90,7 @@
 			children = (
 				915D5DEF2CA6A2D000162B3B /* Config */,
 				915D5DAA2CA6A29700162B3B /* RecognizeLandmark */,
+				918673C52FB2BA05001CE5F4 /* RecognizeLandmarkTests */,
 				915D5DA92CA6A29700162B3B /* Products */,
 			);
 			sourceTree = "<group>";
@@ -76,6 +99,7 @@
 			isa = PBXGroup;
 			children = (
 				915D5DA82CA6A29700162B3B /* RecognizeLandmark.app */,
+				918673C42FB2BA05001CE5F4 /* RecognizeLandmarkTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -191,6 +215,29 @@
 			productReference = 915D5DA82CA6A29700162B3B /* RecognizeLandmark.app */;
 			productType = "com.apple.product-type.application";
 		};
+		918673C32FB2BA05001CE5F4 /* RecognizeLandmarkTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 918673CC2FB2BA05001CE5F4 /* Build configuration list for PBXNativeTarget "RecognizeLandmarkTests" */;
+			buildPhases = (
+				918673C02FB2BA05001CE5F4 /* Sources */,
+				918673C12FB2BA05001CE5F4 /* Frameworks */,
+				918673C22FB2BA05001CE5F4 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				918673C92FB2BA05001CE5F4 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				918673C52FB2BA05001CE5F4 /* RecognizeLandmarkTests */,
+			);
+			name = RecognizeLandmarkTests;
+			packageProductDependencies = (
+			);
+			productName = RecognizeLandmarkTests;
+			productReference = 918673C42FB2BA05001CE5F4 /* RecognizeLandmarkTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -198,11 +245,15 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1520;
+				LastSwiftUpdateCheck = 2640;
 				LastUpgradeCheck = 2640;
 				TargetAttributes = {
 					915D5DA72CA6A29700162B3B = {
 						CreatedOnToolsVersion = 15.2;
+					};
+					918673C32FB2BA05001CE5F4 = {
+						CreatedOnToolsVersion = 26.4.1;
+						TestTargetID = 915D5DA72CA6A29700162B3B;
 					};
 				};
 			};
@@ -220,6 +271,7 @@
 			projectRoot = "";
 			targets = (
 				915D5DA72CA6A29700162B3B /* RecognizeLandmark */,
+				918673C32FB2BA05001CE5F4 /* RecognizeLandmarkTests */,
 			);
 		};
 /* End PBXProject section */
@@ -232,6 +284,13 @@
 				915D5DB82CA6A29900162B3B /* LaunchScreen.storyboard in Resources */,
 				915D5DB52CA6A29900162B3B /* Assets.xcassets in Resources */,
 				915D5DB32CA6A29700162B3B /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		918673C22FB2BA05001CE5F4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -260,7 +319,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		918673C02FB2BA05001CE5F4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		918673C92FB2BA05001CE5F4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 915D5DA72CA6A29700162B3B /* RecognizeLandmark */;
+			targetProxy = 918673C82FB2BA05001CE5F4 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		915D5DB12CA6A29700162B3B /* Main.storyboard */ = {
@@ -457,6 +531,48 @@
 			};
 			name = Release;
 		};
+		918673CA2FB2BA05001CE5F4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.4;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.RecognizeLandmarkTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/RecognizeLandmark.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/RecognizeLandmark";
+			};
+			name = Debug;
+		};
+		918673CB2FB2BA05001CE5F4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.4;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.RecognizeLandmarkTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/RecognizeLandmark.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/RecognizeLandmark";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -474,6 +590,15 @@
 			buildConfigurations = (
 				915D5DBD2CA6A29900162B3B /* Debug */,
 				915D5DBE2CA6A29900162B3B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		918673CC2FB2BA05001CE5F4 /* Build configuration list for PBXNativeTarget "RecognizeLandmarkTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				918673CA2FB2BA05001CE5F4 /* Debug */,
+				918673CB2FB2BA05001CE5F4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
