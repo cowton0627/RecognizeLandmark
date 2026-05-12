@@ -263,22 +263,9 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         Task { @MainActor [weak self] in
             guard let self else { return }
             let location = await self.locationProvider.currentLocation()
-            async let mlCandidates = CaptureClassifier.classify(image)
-            async let placeCandidates: [CaptureCandidate] = {
-                guard let location else { return [] }
-                return await PlaceLookup.lookup(location)
-            }()
-
-            let merged = await self.mergeCandidates(place: placeCandidates,
-                                                    image: mlCandidates)
-            self.presentReview(image: image, candidates: merged, location: location)
+            let candidates = await CaptureFlow.run(image: image, location: location)
+            self.presentReview(image: image, candidates: candidates, location: location)
         }
-    }
-
-    private func mergeCandidates(place: [CaptureCandidate],
-                                 image: [CaptureCandidate]) -> [CaptureCandidate] {
-        var seen = Set<String>()
-        return (place + image).filter { seen.insert($0.name).inserted }
     }
 
     private func presentReview(image: UIImage,

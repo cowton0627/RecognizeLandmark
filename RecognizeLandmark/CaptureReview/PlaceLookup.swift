@@ -14,9 +14,7 @@ enum PlaceLookup {
     static func lookup(_ location: CLLocation) async -> [CaptureCandidate] {
         async let pois = nearbyPOIs(location)
         async let geo = reverseGeocode(location)
-        let combined = await pois + geo
-        var seen = Set<String>()
-        return combined.filter { seen.insert($0.name).inserted }
+        return CaptureCandidate.dedupedByName(await pois + geo)
     }
 
     private static func nearbyPOIs(_ location: CLLocation) async -> [CaptureCandidate] {
