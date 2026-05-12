@@ -43,8 +43,9 @@
 
 ### 換成 Landmark 專用 Core ML 模型
 目前 `VNClassifyImageRequest` 輸出 building / tower / church 這類通用標籤,要拿到具名地標(101、Eiffel Tower)需要換成 landmark 訓練的 `.mlmodel`。
-- 出處:README「替換成地標模型」章節
-- 改動點:`CaptureClassifier.swift` 把 `VNClassifyImageRequest` 換成 `VNCoreMLRequest`;即時 HUD(`ViewController.swift`)是否一起換要評估效能與發熱
+- 出處:README「替換成地標模型」章節、DECISIONS.md「影像 ML 分兩支」
+- 主改動點:`CaptureClassifier.swift` 把 `VNClassifyImageRequest` 換成 `VNCoreMLRequest`(這支只在按下快門時跑一次,允許用較重的模型)
+- 待實機驗證後再決定:即時 HUD(`ViewController.swift`,每 0.5 秒一次)是否也換同一支 Core ML 模型,還是繼續用輕量 `VNClassifyImageRequest`;評估點是效能、發熱、電池
 
 ### 高信心時跳過確認頁
 目前每張都跳確認頁,在景點連拍時會煩。當「附近 POI 距離很近 + 影像 ML 信心很高」時直接存,降低摩擦。
@@ -55,6 +56,12 @@
 目前 `PlaceLookup.swift` 寫死 100 m。不同場景(室內 / 大型景點 / 鬧區)效果差很多。
 - 出處:Stage 5 commit 後的後續討論
 - 想法:Settings 頁開放使用者調,或依當下定位精度自動縮放
+
+### 候選動態 ranking
+目前 `ViewController.mergeCandidates` 候選 chip 順序固定:POI → geocode → image,沒考慮 POI 距離、影像 ML 信心、CLGeocoder 精度。第一版固定順序夠用,實際使用後可能需要更細的排序。
+- 出處:DECISIONS.md「候選排序:POI → geocode → image」trade-off(原文標「待加進 roadmap」)
+- 想法:用「來源權重 × 信心 × 距離衰減」算 score 排序;分數差太小時退回固定順序避免抖動
+- 待決:各來源權重、距離衰減函數、是否在 UI 顯示分數或只是排序
 
 ### 候選結果快取
 短時間在同一地點反覆拍時,不重複打 `MKLocalSearch` / `CLGeocoder`(也省電)。
