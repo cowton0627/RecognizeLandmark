@@ -15,6 +15,22 @@
 
 ---
 
+## 技術堆疊
+
+| 層 | Framework |
+|---|---|
+| UI(相機主流程) | UIKit + Storyboard |
+| UI(列表 / 詳情 / 確認頁) | SwiftUI |
+| 相機 | AVFoundation |
+| 影像 ML | Vision |
+| 地圖 / POI 搜尋 | MapKit |
+| 位置 / 反向地理編碼 | CoreLocation |
+| 持久化 | SwiftData(metadata)+ 自管檔案(照片本體) |
+
+架構決策與替代方案見 [DECISIONS.md](./DECISIONS.md)。
+
+---
+
 ## 環境需求
 
 - macOS + Xcode 15 以上
