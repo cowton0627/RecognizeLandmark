@@ -33,3 +33,6 @@ Carthage/Build/
 
 # Local Xcode signing overrides
 Config/Signing.local.xcconfig
+
+# Claude collaboration config (local only)
+CLAUDE.md
