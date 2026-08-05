@@ -6,11 +6,30 @@
 
 ---
 
+## 畫面
+
+| 相機即時辨識 | 拍照 / 匯入確認頁 | 足跡列表 |
+|---|---|---|
+| <img src="docs/screenshots/01-camera.jpg" width="230"> | <img src="docs/screenshots/02-capture-review.jpg" width="230"> | <img src="docs/screenshots/03-records-list.jpg" width="230"> |
+| 取景時每 0.5 秒跑一次 Vision 分類,只顯示信心 ≥ 20% 的前 3 名 | POI / 地址 / 影像三路候選合併排序,可點 chip、改名、修正位置,確認才存 | 時間倒序,顯示縮圖、地點、時間與座標;沒有影像結果時標「未評分」 |
+
+| 足跡地圖 | 記錄詳情 |
+|---|---|
+| <img src="docs/screenshots/04-map.jpg" width="230"> | <img src="docs/screenshots/05-detail.jpg" width="230"> |
+| 所有含座標的記錄,100 公尺內會聚合成一個 pin | 大圖、地點、拍攝時間、影像信心、地圖標記與可編輯筆記 |
+
+第二張就是確認頁存在的理由:距離最近的 POI 常常是隔壁的旅館或民宿而不是地標本身(這張的候選裡就混著 `Giza Home hotel`),所以名稱不自動採用,要人挑過或改過才存。
+
+> 相機那張為實機截圖,其餘為 iOS 模擬器。示範資料是作者自己拍的照片(埃及吉薩、路克索、台灣雲海保線所),照片內嵌的 GPS 直接用來查附近 POI 與反向地理編碼。截圖壓縮流程見 `tools/prep_screenshots.py`。
+
+---
+
 ## 功能
 
 - **相機 tab**:即時取景 + 每 0.5 秒辨識一次,顯示信心 ≥ 20% 的前 3 名(僅作為拍照前的視覺回饋)。
+- **相簿匯入**:可從系統 Photos picker 選一張舊照片,優先沿用內嵌拍攝時間與 GPS,再走與相機相同的多來源候選／確認／儲存流程;沒有 GPS 時可在確認頁手動選位置。
 - **拍照確認頁**:按下快門後同時跑「附近 POI / 反向地理編碼 / 影像 ML」三路候選,跳出確認頁讓使用者點選候選 chip 或自己編輯名稱、加筆記,確認才正式存。取消則丟棄(不留孤兒照片檔)。
-- **記錄 tab**:時間倒序的列表,每一列顯示縮圖、名稱、時間、座標(沒有的話顯示「無位置」)與信心度百分比;支援左滑刪除。空列表時會引導去相機分頁拍第一張。
+- **足跡 tab**:可切換時間倒序列表與地圖。列表顯示縮圖、地點、畫面內容、時間與座標;地圖會聚合 100 公尺內的記錄,點 pin 可看縮圖摘要並進入詳情。只有影像辨識有結果時才顯示「影像信心」,否則顯示「未評分」。
 - **詳情頁**:大圖、地圖標記(MapKit)、可編輯的筆記、右上角刪除確認。
 
 ---
@@ -28,6 +47,8 @@
 | 持久化 | SwiftData(metadata)+ 自管檔案(照片本體) |
 
 架構決策與替代方案見 [DECISIONS.md](./DECISIONS.md)。
+
+核心辨識流程以 closure injection 隔離 `CaptureClassifier` 與 `PlaceLookup`,單元測試不需真實相機、GPS 或網路。`PhotoStorage` 也可指定暫存目錄,避免檔案測試污染 App Documents。
 
 ---
 
@@ -81,11 +102,13 @@
 - 按快門 → 暫停取景 → 同步跑影像 ML、`MKLocalSearch` 附近 POI(半徑 100 m)、`CLGeocoder` 反向地理編碼 → 跳出確認頁。
 - 確認頁可以:點候選 chip(POI / geocode / image 三種來源用不同 icon 標示)、改名稱、加筆記、看地圖預覽。沒有任何候選時(例如拒絕位置權限且影像 ML 都低於門檻),預填欄位會放當下時間戳記。
 - **只有按「儲存」才寫入 SwiftData + 寫照片檔**;按「取消」就完全丟棄,不會留下孤兒檔。
+- 點右下角「相簿」可選取既有照片。系統 picker 不要求 App 取得完整照片圖庫權限;若照片含 EXIF GPS,會用原拍攝位置搜尋 POI,否則可用「修正位置」手動指定。
 
-### 記錄 tab
+### 足跡 tab
 - 時間倒序列表,點任一筆進入詳情。
 - 列表左滑可直接刪除;詳情頁右上角垃圾桶會跳確認對話框。
 - 詳情頁可編輯筆記,變更會即時寫回 SwiftData。
+- 切換到地圖可查看所有含座標的記錄;100 公尺內的記錄會聚合並顯示筆數。點 pin 後可從底部摘要卡進入最近一筆詳情。
 
 ---
 
@@ -94,8 +117,11 @@
 ```
 RecognizeLandmark/
 ├── RecognizeLandmark.xcodeproj/      # Xcode 專案
+├── docs/
+│   └── screenshots/                  # README 用的截圖(已壓成 640px 寬 JPEG)
 ├── tools/
-│   └── make_icon.py                  # 用 Pillow 重新產生 1024x1024 app icon
+│   ├── make_icon.py                  # 用 Pillow 重新產生 1024x1024 app icon
+│   └── prep_screenshots.py           # 把原始截圖縮到 README 尺寸
 └── RecognizeLandmark/
     ├── App/
     │   ├── AppDelegate.swift
@@ -128,7 +154,7 @@ RecognizeLandmark/
 
 ## 資料儲存
 
-- **記錄(metadata)**:SwiftData(`LandmarkRecord`),欄位包含時間、辨識名稱、信心度、照片檔名、經緯度、筆記。
+- **記錄(metadata)**:SwiftData(`LandmarkRecord`),分開保存使用者確認的地點名稱與影像辨識的內容／信心,另含時間、照片檔名、經緯度與筆記。POI／地址本身沒有影像信心,不會再以 0% 冒充評分。
 - **照片(影像本體)**:不存進 SwiftData,放在 App Documents 下的 `photos/` 目錄,以 UUID 為檔名的 JPEG(壓縮品質 0.85),由 `PhotoStorage` 統一管理。
 - **刪除**:刪除一筆記錄時會同步清掉對應照片檔,避免孤兒檔案。
 
@@ -136,7 +162,7 @@ RecognizeLandmark/
 
 ## 權限
 
-- `NSCameraUsageDescription`:即時辨識與拍照所需。
+- `NSCameraUsageDescription`:即時辨識與拍照所需。拒絕時會顯示前往設定入口,且仍可使用相簿匯入。
 - `NSLocationWhenInUseUsageDescription`:拍照當下記錄座標,讓詳情頁可以用地圖回顧位置;拒絕也能正常使用,只是不會有地圖。
 
 ---
@@ -180,4 +206,6 @@ python3 tools/make_icon.py
 
 本專案以 MIT License 授權,完整條款見 [LICENSE](./LICENSE)。
 
-App 本體沒有第三方 runtime 相依,只用 Apple 系統 framework(Vision / AVFoundation / MapKit / CoreLocation / SwiftData / SwiftUI / UIKit)。`tools/make_icon.py` 僅在開發端執行,使用 [Pillow](https://python-pillow.org/)(HPND License)。
+App 本體沒有第三方 runtime 相依,只用 Apple 系統 framework(Vision / AVFoundation / MapKit / CoreLocation / SwiftData / SwiftUI / UIKit)。`tools/` 下的 `make_icon.py` 與 `prep_screenshots.py` 僅在開發端執行,使用 [Pillow](https://python-pillow.org/)(HPND License)。
+
+`docs/screenshots/` 內的截圖包含作者本人拍攝的照片,同樣以 MIT License 一併釋出。
