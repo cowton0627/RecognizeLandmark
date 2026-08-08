@@ -16,7 +16,7 @@ struct CandidateDedupTests {
         #expect(CaptureCandidate.dedupedByName([]).isEmpty)
     }
 
-    @Test func keepsFirstOccurrenceOrder() {
+    @Test func ranksNearbyPOIBeforeGeocodeAndImage() {
         let input = [
             makeCandidate(name: "龍山寺", source: .poi),
             makeCandidate(name: "西門町", source: .geocode),
@@ -35,6 +35,32 @@ struct CandidateDedupTests {
         let result = CaptureCandidate.dedupedByName(input)
         #expect(result.count == 1)
         #expect(result.first?.source == .poi)
+    }
+
+    @Test func keepsHigherScoringDuplicateRegardlessOfInputOrder() {
+        let input = [
+            makeCandidate(name: "Taipei 101", source: .image, confidence: 0.95),
+            makeCandidate(name: " taipei 101 ", source: .poi, distance: 12),
+        ]
+        let result = CaptureCandidate.dedupedByName(input)
+        #expect(result.count == 1)
+        #expect(result.first?.source == .poi)
+    }
+
+    @Test func nearerPOIRanksFirst() {
+        let result = CaptureCandidate.dedupedByName([
+            makeCandidate(name: "遠處", source: .poi, distance: 90),
+            makeCandidate(name: "近處", source: .poi, distance: 8),
+        ])
+        #expect(result.map(\.name) == ["近處", "遠處"])
+    }
+
+    @Test func higherConfidenceImageRanksFirst() {
+        let result = CaptureCandidate.dedupedByName([
+            makeCandidate(name: "low", source: .image, confidence: 0.3),
+            makeCandidate(name: "high", source: .image, confidence: 0.9),
+        ])
+        #expect(result.map(\.name) == ["high", "low"])
     }
 
     @Test func preservesPlaceCandidatesBeforeImageCandidates() {

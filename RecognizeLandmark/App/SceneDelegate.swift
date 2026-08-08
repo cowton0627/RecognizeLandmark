@@ -38,9 +38,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 .modelContainer(Persistence.container)
             let vc = UIHostingController(rootView: view)
             vc.tabBarItem = UITabBarItem(
-                title: "記錄",
-                image: UIImage(systemName: "list.bullet.rectangle"),
-                selectedImage: UIImage(systemName: "list.bullet.rectangle.fill")
+                title: "足跡",
+                image: UIImage(systemName: "map"),
+                selectedImage: UIImage(systemName: "map.fill")
             )
             return vc
         }()

@@ -24,14 +24,27 @@ struct RecordDetailView: View {
                 VStack(alignment: .leading, spacing: 6) {
                     Text(record.recognizedName)
                         .font(.title.bold())
+                    Label("地點", systemImage: "mappin.and.ellipse")
+                        .font(.caption)
+                        .foregroundStyle(.tertiary)
                     Label(record.timestamp.formatted(date: .long, time: .shortened),
                           systemImage: "clock")
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
-                    Label("信心度 \(Int(record.confidence * 100))%",
-                          systemImage: "chart.bar")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
+                    if let imageLabel = record.imageLabel {
+                        Label("畫面內容：\(imageLabel)", systemImage: "camera.viewfinder")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                    }
+                    if let confidence = record.effectiveImageConfidence {
+                        Label("影像辨識信心 \(Int(confidence * 100))%", systemImage: "chart.bar")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                    } else {
+                        Label("影像辨識未評分", systemImage: "chart.bar")
+                            .font(.subheadline)
+                            .foregroundStyle(.tertiary)
+                    }
                 }
                 .padding(.horizontal)
 
@@ -127,7 +140,11 @@ struct RecordDetailView: View {
     private func deleteRecord() {
         let filename = record.photoFilename
         Task.detached(priority: .utility) {
-            try? PhotoStorage.shared.delete(filename)
+            do {
+                try PhotoStorage.shared.delete(filename)
+            } catch {
+                print("Failed to delete photo \(filename): \(error)")
+            }
         }
         modelContext.delete(record)
         dismiss()

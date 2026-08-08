@@ -26,7 +26,7 @@ enum CaptureClassifier {
                                                     options: [:])
                 do {
                     try handler.perform([request])
-                    let observations = (request.results as? [VNClassificationObservation]) ?? []
+                    let observations = request.results ?? []
                     let candidates = observations
                         .filter { $0.confidence >= 0.2 }
                         .prefix(3)

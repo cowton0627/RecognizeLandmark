@@ -10,7 +10,7 @@ import MapKit
 enum PlaceLookup {
 
     /// 同時跑 MKLocalSearch(附近 POI)與 CLGeocoder(反向地理編碼),
-    /// 合併後依 source 排序、依名稱去重。
+    /// 合併後依名稱去重並套用候選 ranking。
     static func lookup(_ location: CLLocation) async -> [CaptureCandidate] {
         async let pois = nearbyPOIs(location)
         async let geo = reverseGeocode(location)

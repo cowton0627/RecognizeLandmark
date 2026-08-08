@@ -5,7 +5,7 @@
 	<key>CFBundleDisplayName</key>
 	<string>景跡簿</string>
 	<key>NSCameraUsageDescription</key>
-	<string>We need access to your camera to recognize landmarks.</string>
+	<string>拍攝眼前的景點並提供影像辨識候選，照片只會在你確認後保存在裝置上。</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>記錄景點時會帶上當下的位置,讓你之後能在地圖上瀏覽。</string>
 	<key>UIApplicationSceneManifest</key>

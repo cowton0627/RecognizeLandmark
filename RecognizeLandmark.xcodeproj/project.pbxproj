@@ -25,6 +25,7 @@
 		915D5DD32CA6A2D000162B3B /* CaptureReviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 915D5DD22CA6A2D000162B3B /* CaptureReviewView.swift */; };
 		915D5DD52CA6A2D000162B3B /* SketchUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 915D5DD42CA6A2D000162B3B /* SketchUI.swift */; };
 		915D5DF32CA6A2D000162B3B /* CaptureFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 915D5DF22CA6A2D000162B3B /* CaptureFlow.swift */; };
+		915D5DF52CA6A2D000162B3B /* PhotoImportService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 915D5DF42CA6A2D000162B3B /* PhotoImportService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -60,6 +61,7 @@
 		915D5DF02CA6A2D000162B3B /* Signing.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Signing.xcconfig; sourceTree = "<group>"; };
 		915D5DF12CA6A2D000162B3B /* Signing.local.xcconfig.example */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Signing.local.xcconfig.example; sourceTree = "<group>"; };
 		915D5DF22CA6A2D000162B3B /* CaptureFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureFlow.swift; sourceTree = "<group>"; };
+		915D5DF42CA6A2D000162B3B /* PhotoImportService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoImportService.swift; sourceTree = "<group>"; };
 		918673C42FB2BA05001CE5F4 /* RecognizeLandmarkTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RecognizeLandmarkTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -171,6 +173,7 @@
 			isa = PBXGroup;
 			children = (
 				915D5DC42CA6A2D000162B3B /* LocationProvider.swift */,
+				915D5DF42CA6A2D000162B3B /* PhotoImportService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -316,6 +319,7 @@
 				915D5DD32CA6A2D000162B3B /* CaptureReviewView.swift in Sources */,
 				915D5DD52CA6A2D000162B3B /* SketchUI.swift in Sources */,
 				915D5DF32CA6A2D000162B3B /* CaptureFlow.swift in Sources */,
+				915D5DF52CA6A2D000162B3B /* PhotoImportService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

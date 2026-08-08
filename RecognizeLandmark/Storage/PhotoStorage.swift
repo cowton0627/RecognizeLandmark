@@ -6,7 +6,7 @@
 import Foundation
 import UIKit
 
-enum PhotoStorageError: Error {
+enum PhotoStorageError: Error, Equatable {
     case writeFailed
     case fileNotFound
     case decodeFailed
@@ -17,16 +17,24 @@ struct PhotoStorage {
 
     private let directoryName = "photos"
     private let jpegQuality: CGFloat = 0.85
+    private let customDirectoryURL: URL?
+    private let fileManager: FileManager
+
+    init(directoryURL: URL? = nil, fileManager: FileManager = .default) {
+        self.customDirectoryURL = directoryURL
+        self.fileManager = fileManager
+    }
 
     private var directoryURL: URL {
-        let docs = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        if let customDirectoryURL { return customDirectoryURL }
+        let docs = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
         return docs.appendingPathComponent(directoryName, isDirectory: true)
     }
 
     private func ensureDirectory() throws {
         let url = directoryURL
-        if !FileManager.default.fileExists(atPath: url.path) {
-            try FileManager.default.createDirectory(at: url, withIntermediateDirectories: true)
+        if !fileManager.fileExists(atPath: url.path) {
+            try fileManager.createDirectory(at: url, withIntermediateDirectories: true)
         }
     }
 
@@ -44,7 +52,7 @@ struct PhotoStorage {
 
     func load(_ filename: String) throws -> UIImage {
         let url = directoryURL.appendingPathComponent(filename)
-        guard FileManager.default.fileExists(atPath: url.path) else {
+        guard fileManager.fileExists(atPath: url.path) else {
             throw PhotoStorageError.fileNotFound
         }
         let data = try Data(contentsOf: url)
@@ -56,8 +64,8 @@ struct PhotoStorage {
 
     func delete(_ filename: String) throws {
         let url = directoryURL.appendingPathComponent(filename)
-        if FileManager.default.fileExists(atPath: url.path) {
-            try FileManager.default.removeItem(at: url)
+        if fileManager.fileExists(atPath: url.path) {
+            try fileManager.removeItem(at: url)
         }
     }
 
