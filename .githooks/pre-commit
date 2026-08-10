@@ -10,19 +10,36 @@
 
 set -euo pipefail
 
+# 接著跑全域 hook。core.hooksPath 是覆蓋不是疊加 —— 這個 repo 設了
+# .githooks 之後,~/.config/git/hooks 底下那支就完全不會被執行,
+# 連帶失去 gitleaks 的內容掃描。每一個正常離開點都要經過這裡。
+run_global_hook_and_exit() {
+  global_hooks=$(git config --global --get core.hooksPath || true)
+  if [ -n "$global_hooks" ]; then
+    global_hook="$global_hooks/pre-commit"
+    if [ -x "$global_hook" ] && [ "$global_hook" != "$0" ]; then
+      exec "$global_hook" "$@"
+    fi
+  fi
+  exit 0
+}
+
 files=$(git diff --cached --name-only --diff-filter=ACM \
   | grep -E '\.(pbxproj|xcconfig)$' || true)
 
 if [ -z "$files" ]; then
-  exit 0
+  run_global_hook_and_exit "$@"
 fi
 
 hit=0
 while IFS= read -r f; do
   [ -z "$f" ] && continue
   content=$(git show ":$f" 2>/dev/null || true)
+  # 前面的字元類別排除底線,否則 LOCAL_DEVELOPMENT_TEAM = <佔位字串> 會誤判;
+  # 中間的 (\[...\]) 用來涵蓋 "DEVELOPMENT_TEAM[sdk=iphoneos*]" = XXX; 這種
+  # 條件式寫法 —— 它同樣會覆蓋 xcconfig 提供的值,漏掉就等於沒擋。
   bad=$(printf '%s\n' "$content" \
-    | grep -nE 'DEVELOPMENT_TEAM[[:space:]]*=[[:space:]]*[A-Z0-9]{10}\b' || true)
+    | grep -nE '(^|[^_A-Za-z0-9])"?DEVELOPMENT_TEAM(\[[^]]*\])?"?[[:space:]]*=[[:space:]]*"?[A-Z0-9]{8,12}"?' || true)
   if [ -n "$bad" ]; then
     if [ $hit -eq 0 ]; then
       echo "✘ pre-commit: 偵測到 Apple Developer Team ID,拒絕 commit。" >&2
@@ -46,4 +63,4 @@ if [ $hit -ne 0 ]; then
   exit 1
 fi
 
-exit 0
+run_global_hook_and_exit "$@"
